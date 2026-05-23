@@ -128,3 +128,25 @@
     @apply font-sans;
     }
 }
+
+.projects-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.projects-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.projects-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.projects-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.projects-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}

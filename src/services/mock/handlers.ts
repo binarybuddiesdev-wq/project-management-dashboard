@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { IApiResponse, ILoginResponseData, ISignupResponseData, IForgotPasswordResponseData, IUser } from '@/types'
+import type { IApiResponse, ILoginResponseData, ISignupResponseData, IForgotPasswordResponseData, IUser, IProject, IProjectFormData } from '@/types'
 
 // Retrieve registered users from localStorage, seeding a default user if empty
 const getRegisteredUsers = (): Record<string, string>[] => {
@@ -32,6 +32,41 @@ const registerUser = (user: Record<string, string>): void => {
   users.push(user)
   localStorage.setItem('registered_users', JSON.stringify(users))
 }
+
+// ── Projects Store ──
+const PROJECTS_STORAGE_KEY = 'msw_projects'
+
+const projectsSeed: IProject[] = [
+  { id: 'p1', name: 'Brand Redesign', description: 'Complete brand identity redesign including logo, colors, and typography.', status: 'active', priority: 'high', dueDate: '2026-06-15', assignees: ['Sarah Connor', 'John Doe'], taskCount: 15, progress: 68, createdAt: '2026-04-01T10:00:00Z', updatedAt: '2026-05-20T14:30:00Z' },
+  { id: 'p2', name: 'Mobile App Implementation', description: 'Build cross-platform mobile application using React Native.', status: 'active', priority: 'urgent', dueDate: '2026-07-01', assignees: ['John Doe'], taskCount: 22, progress: 45, createdAt: '2026-04-10T08:00:00Z', updatedAt: '2026-05-19T16:00:00Z' },
+  { id: 'p3', name: 'API Refactoring', description: 'Refactor legacy REST APIs to improve performance and maintainability.', status: 'completed', priority: 'medium', dueDate: '2026-05-20', assignees: ['Kyle Reese', 'Sarah Connor'], taskCount: 8, progress: 100, createdAt: '2026-03-15T09:00:00Z', updatedAt: '2026-05-18T11:00:00Z' },
+  { id: 'p4', name: 'Design System V2', description: 'Evolve the component library with new patterns and improved accessibility.', status: 'on_hold', priority: 'low', dueDate: '2026-08-10', assignees: ['Sarah Connor'], taskCount: 5, progress: 12, createdAt: '2026-05-01T12:00:00Z', updatedAt: '2026-05-17T09:00:00Z' },
+]
+
+const loadProjects = (): IProject[] => {
+  if (typeof window === 'undefined') {
+    return [...projectsSeed]
+  }
+  const stored = localStorage.getItem(PROJECTS_STORAGE_KEY)
+  if (!stored) {
+    localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projectsSeed))
+    return [...projectsSeed]
+  }
+  try {
+    return JSON.parse(stored) as IProject[]
+  } catch {
+    return [...projectsSeed]
+  }
+}
+
+const saveProjects = (projects: IProject[]): void => {
+  if (typeof window === 'undefined') {
+    return
+  }
+  localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects))
+}
+
+let projectsStore: IProject[] = loadProjects()
 
 export const handlers = [
   http.get('*/api/health', () => {
@@ -284,5 +319,84 @@ export const handlers = [
     }
 
     return HttpResponse.json<IApiResponse<typeof dashboardData>>({ data: dashboardData })
+  }),
+
+  http.get('*/api/projects', ({ request }) => {
+    const url = new URL(request.url)
+    const status = url.searchParams.get('status')
+    const priority = url.searchParams.get('priority')
+    const search = url.searchParams.get('search')
+
+    let filtered = [...projectsStore]
+
+    if (status) {
+      filtered = filtered.filter((p) => p.status === status)
+    }
+    if (priority) {
+      filtered = filtered.filter((p) => p.priority === priority)
+    }
+    if (search) {
+      const term = search.toLowerCase()
+      filtered = filtered.filter((p) => p.name.toLowerCase().includes(term) || p.description.toLowerCase().includes(term))
+    }
+
+    return HttpResponse.json<IApiResponse<IProject[]>>({ data: filtered })
+  }),
+
+  http.get('*/api/projects/:id', ({ params }) => {
+    const { id } = params
+    const project = projectsStore.find((p) => p.id === id)
+    if (!project) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Project not found' }, { status: 404 })
+    }
+    return HttpResponse.json<IApiResponse<IProject>>({ data: project })
+  }),
+
+  http.post('*/api/projects', async ({ request }) => {
+    const body = (await request.json()) as IProjectFormData
+    const newProject: IProject = {
+      id: `p${Date.now()}`,
+      name: body.name,
+      description: body.description,
+      status: body.status,
+      priority: body.priority,
+      dueDate: body.dueDate,
+      assignees: body.assignees,
+      taskCount: 0,
+      progress: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    projectsStore = [...projectsStore, newProject]
+    saveProjects(projectsStore)
+    return HttpResponse.json<IApiResponse<IProject>>({ data: newProject }, { status: 201 })
+  }),
+
+  http.put('*/api/projects/:id', async ({ params, request }) => {
+    const { id } = params
+    const body = (await request.json()) as Partial<IProjectFormData>
+    const index = projectsStore.findIndex((p) => p.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Project not found' }, { status: 404 })
+    }
+    const updated: IProject = {
+      ...projectsStore[index],
+      ...body,
+      updatedAt: new Date().toISOString(),
+    }
+    projectsStore = [...projectsStore.slice(0, index), updated, ...projectsStore.slice(index + 1)]
+    saveProjects(projectsStore)
+    return HttpResponse.json<IApiResponse<IProject>>({ data: updated })
+  }),
+
+  http.delete('*/api/projects/:id', ({ params }) => {
+    const { id } = params
+    const index = projectsStore.findIndex((p) => p.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Project not found' }, { status: 404 })
+    }
+    projectsStore = projectsStore.filter((p) => p.id !== id)
+    saveProjects(projectsStore)
+    return HttpResponse.json<IApiResponse<null>>({ data: null })
   }),
 ]

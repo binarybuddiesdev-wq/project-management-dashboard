@@ -9,4 +9,7 @@ export * from './ActivityChart'
 export * from './CompletionChart'
 export * from './RecentProjects'
 export * from './ActivityFeed'
+export * from './ProjectCard'
+export * from './ProjectModal'
+export * from './ProjectFilters'
 

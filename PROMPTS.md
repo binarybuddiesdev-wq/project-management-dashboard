@@ -201,7 +201,50 @@ All agent.md rules apply.
 
 ## Phase 5 — Projects
 
-_Not yet started._
+**Built using OpenCode AI following the same strict agent rules:**
+
+```
+/startcycle Start Phase 5 — Projects.
+
+Read docs/phase-5/implementation-plan.md and docs/phase-5/walkthrough.md carefully.
+
+Frontend Engineer:
+1. Create project types in src/types/project.types.ts — IProject, IProjectFormData, IProjectCardProps, IProjectModalProps, IProjectFiltersProps
+2. Create projects.service.ts in src/services — getProjects, getProject, createProject, updateProject, deleteProject using ky
+3. Create useProjects.ts in src/hooks — useProjects, useProject, useCreateProject, useUpdateProject, useDeleteProject wrapping TanStack Query with optimistic updates
+4. Create ProjectCard.tsx in src/components/ProjectCard — animated project card with hover states and edit/delete actions
+5. Create ProjectModal.tsx in src/components/ProjectModal — Create/Edit form modal using React Hook Form + Zod
+6. Create ProjectFilters.tsx in src/components/ProjectFilters — search input, status dropdown, priority dropdown
+7. Create ProjectsList.tsx in src/pages/Projects — project list page with loading, error, and empty states
+8. Create ProjectDetail.tsx in src/pages/Projects — project detail page with edit/delete triggers, back button, metadata, progress indicators
+9. Update App.tsx — add /projects and /projects/:id routes
+10. Update barrel exports in components, pages, hooks, services, types index files
+
+Test Engineer:
+- projects.service.test.ts — CRUD integration tests
+- useProjects.test.tsx — query and mutation scenarios with optimistic updates
+- ProjectCard.test.tsx — card display, hover, and delete action triggers
+- ProjectModal.test.tsx — form fields and Zod validation checks
+- ProjectFilters.test.tsx — change callback handler triggers
+- ProjectsList.test.tsx — skeleton loading and empty state renders
+- ProjectDetail.test.tsx — detailed display, edit, and delete triggers
+
+Comply with all rules from agents.md: prefixed interfaces, named exports, no inline destructuring, path aliases, co-located test files.
+```
+
+**Fix Prompts and Performance Optimization Prompts applied via OpenCode AI:**
+- "Ensure all newly added project components wrap with React.memo for optimal rendering performance."
+- "Move all static lookup objects like STATUS_COLORS and PRIORITY_COLORS outside the component functions to prevent re-creation."
+- "Optimize the search bar input handler using useCallback to prevent parent re-renders."
+- "Replaced Framer Motion width animations on the sidebar with CSS transitions only for smooth collapse rendering."
+- "Added will-change: transform and transform: translateZ(0) to the sidebar for GPU acceleration."
+- "Wrapped handleToggleSidebar in useCallback in AppLayout.tsx, and memoized getPageTitle using useMemo."
+- "Added useCallback to onSubmit in Login/Signup/ForgotPassword pages."
+- "Added useMemo to getPasswordStrength in Signup."
+- "Moved formatLabel outside Breadcrumb component."
+- "Wrapped heavy components with React.memo, and moved static arrays/objects outside component bodies."
+
+---
 
 ## Phase 6 — Kanban Board
 
