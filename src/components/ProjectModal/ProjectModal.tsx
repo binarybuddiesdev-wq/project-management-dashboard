@@ -1,9 +1,13 @@
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { X } from 'lucide-react'
+import { X, CalendarIcon } from 'lucide-react'
+import { format } from 'date-fns'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { Calendar } from '@/components/ui/calendar'
+import { cn } from '@/lib/utils'
 import type { IProjectModalProps, IProjectFormData } from '@/types'
 
 const projectSchema = z.object({
@@ -23,6 +27,7 @@ export const ProjectModal = (props: IProjectModalProps) => {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<IProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -170,15 +175,38 @@ export const ProjectModal = (props: IProjectModalProps) => {
                 <label htmlFor="dueDate" className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block select-none">
                   Due Date
                 </label>
-                <input
-                  id="dueDate"
-                  type="date"
-                  {...register('dueDate')}
-                  className={`w-full px-3 py-2 rounded-lg border bg-background text-sm transition-all outline-none focus:ring-2 focus:ring-primary/20 ${
-                    errors.dueDate ? 'border-destructive focus:border-destructive' : 'border-border focus:border-primary'
-                  }`}
+                <Controller
+                  control={control}
+                  name="dueDate"
+                  render={({ field, fieldState }) => (
+                    <div className="relative">
+                      <input type="text" id="dueDate" className="sr-only" {...field} readOnly />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className={cn(
+                              'w-full flex items-center gap-2 px-3 py-2 rounded-lg border bg-background text-sm transition-all outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer',
+                              field.value ? 'text-foreground' : 'text-muted-foreground',
+                              fieldState.error ? 'border-destructive focus:border-destructive' : 'border-border focus:border-primary'
+                            )}
+                          >
+                            <CalendarIcon className="h-4 w-4 shrink-0" />
+                            <span>{field.value ? format(new Date(field.value + 'T00:00:00'), 'MMM dd, yyyy') : 'Pick a date'}</span>
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value ? new Date(field.value + 'T00:00:00') : undefined}
+                            onSelect={(date) => field.onChange(date ? format(date, 'yyyy-MM-dd') : '')}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {fieldState.error && <p className="text-destructive text-xs mt-1">{fieldState.error.message}</p>}
+                    </div>
+                  )}
                 />
-                {errors.dueDate && <p className="text-destructive text-xs mt-1">{errors.dueDate.message}</p>}
               </div>
 
               <div className="space-y-1">

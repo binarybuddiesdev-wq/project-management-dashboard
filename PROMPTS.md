@@ -284,7 +284,64 @@ Comply with all rules from agents.md: prefixed interfaces, named exports, no inl
 
 ## Phase 7 — Team Members, Notifications & Settings
 
-_Not yet started._
+**Built using OpenCode AI following the same strict agent rules:**
+
+```
+/startcycle Start Phase 7 — Team Members, Notifications & Settings.
+
+Read docs/phase-7/implementation-plan.md and docs/phase-7/walkthrough.md carefully.
+
+Frontend Engineer:
+1. Create team types in src/types/team.types.ts — IMember, IMemberFormData, IMemberCardProps, IInviteMemberModalProps
+2. Create notification types in src/types/notifications.types.ts — INotification, INotificationState, INotificationItemProps
+3. Create settings types in src/types/settings.types.ts — IProfileFormData, IPasswordFormData
+4. Create team.service.ts in src/services — getMembers, inviteMember, updateMember, removeMember using ky
+5. Create notifications.service.ts in src/services — getNotifications, markNotificationRead, markAllNotificationsRead using ky
+6. Create useTeam.ts in src/hooks — useMembers, useInviteMember, useUpdateMember, useRemoveMember wrapping TanStack Query with mutations
+7. Create useNotifications.ts in src/hooks — useNotifications, useMarkNotificationRead, useMarkAllNotificationsRead wrapping TanStack Query + dispatching Redux actions
+8. Create useSettings.ts in src/hooks — updateProfile, changePassword (purely local, no TanStack Query)
+9. Create notificationsSlice.ts in src/store — setNotifications, markAsRead, markAllAsRead, incrementUnread reducers, selectUnreadCount selector
+10. Extend MSW handlers for team CRUD (6 seeded members) and notification endpoints (seeded per-user)
+11. Create MemberCard.tsx in src/components/MemberCard — card with avatar, role badge, delete action
+12. Create InviteMemberModal.tsx in src/components/InviteMemberModal — form modal using React Hook Form + Zod
+13. Create NotificationItem.tsx in src/components/NotificationItem — type-based icons, relative timestamps, mark-read button
+14. Create TeamMembers.tsx in src/pages/Team — virtualized list with @tanstack/react-virtual, loading/error/empty states
+15. Create Notifications.tsx in src/pages/Notifications — notification list with mark all read, loading/error/empty states
+16. Create Settings.tsx in src/pages/Settings — profile form, password change, theme toggle with React Hook Form + Zod
+17. Update App.tsx — add /team, /notifications, /settings routes
+18. Update Topbar.tsx — replace static notification dot with dynamic unread count from Redux + Link to /notifications
+19. Add custom scrollbar CSS classes for team, notifications, and settings pages
+20. Update all barrel exports in components, pages, hooks, services, store, types
+
+Test Engineer:
+- team.service.test.ts — CRUD integration tests
+- notifications.service.test.ts — fetch, mark read, mark all read
+- useTeam.test.tsx — query and mutation scenarios
+- useNotifications.test.tsx — query, mark read, mark all read, Redux sync
+- useSettings.test.tsx — profile update, password change, error handling
+- notificationsSlice.test.ts — all reducers and selectors
+- MemberCard.test.tsx — member display, delete action
+- InviteMemberModal.test.tsx — form fields, Zod validation
+- NotificationItem.test.tsx — type icons, mark read, time ago
+- TeamMembers.test.tsx — loading, error, empty, populated states
+- Notifications.test.tsx — loading, error, empty, populated states
+- SettingsPage.test.tsx — profile form, password change, theme toggle
+
+Comply with all rules from agents.md: prefixed interfaces, named exports, no inline destructuring, path aliases, co-located test files.
+```
+
+**Fix Prompts Used During Phase 7:**
+- "Fix barrel exports — services/index.ts and hooks/index.ts missing new Phase 7 exports, causing build to fail."
+- "Fix the Topbar test — add notificationsReducer to store mock and wrap in MemoryRouter for the new Link component in the notification bell."
+- "Fix the AppLayout test — add notificationsReducer to store mock to provide the notifications slice in the Redux store."
+- "Fix NotificationItem unused import — remove UserPlus from the lucide-react import list in NotificationItem.tsx."
+- "12 new test files were created for Phase 7 — write comprehensive tests for all Phase 7 services, hooks, store, components, and pages. Fix 9 failing tests across useTeam, TeamMembers, NotificationsPage, and InviteMemberModal. Final state: **290/290 tests across 48 files**, zero TypeScript errors, zero build errors."
+
+   Key issues fixed:
+   - `vi.spyOn` does not intercept named ESM imports when consumer destructures at import time — use `vi.hoisted()` + `vi.mock()` instead.
+   - `@tanstack/react-virtual` does not render items in JSDOM (no layout dimensions) — assert on container element, not virtualized children.
+   - React 19 `fireEvent` requires explicit `{ target: { value } }` in event options; setting `.value` directly is insufficient.
+   - `<select>` options are pre-defined; test values must match an existing option or validation silently fails.
 
 ## Phase 8 — End to End Tests & Final Polish
 

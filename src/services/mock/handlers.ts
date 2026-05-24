@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { IApiResponse, ILoginResponseData, ISignupResponseData, IForgotPasswordResponseData, IUser, IProject, IProjectFormData, ITask, ITaskFormData } from '@/types'
+import type { IApiResponse, ILoginResponseData, ISignupResponseData, IForgotPasswordResponseData, IUser, IProject, IProjectFormData, ITask, ITaskFormData, IMember, IMemberFormData, INotification } from '@/types'
 
 // Retrieve registered users from localStorage, seeding a default user if empty
 const getRegisteredUsers = (): Record<string, string>[] => {
@@ -146,6 +146,67 @@ const saveTasks = (tasks: ITask[]): void => {
 }
 
 let tasksStore: ITask[] = loadTasks()
+
+// ── Team Store ──
+const TEAM_STORAGE_KEY = 'msw_team'
+
+const teamSeed: IMember[] = [
+  { id: 'm1', name: 'John Doe', email: 'john@example.com', role: 'Product Manager', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop', department: 'Product', joinedAt: '2026-01-15T09:00:00Z' },
+  { id: 'm2', name: 'Sarah Connor', email: 'sarah@example.com', role: 'Lead Engineer', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop', department: 'Engineering', joinedAt: '2026-02-01T10:00:00Z' },
+  { id: 'm3', name: 'Kyle Reese', email: 'kyle@example.com', role: 'Frontend Developer', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop', department: 'Engineering', joinedAt: '2026-03-10T08:00:00Z' },
+  { id: 'm4', name: 'Jane Smith', email: 'jane@example.com', role: 'UX Designer', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop', department: 'Design', joinedAt: '2026-01-20T11:00:00Z' },
+  { id: 'm5', name: 'Mike Chen', email: 'mike@example.com', role: 'Backend Developer', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop', department: 'Engineering', joinedAt: '2026-04-05T09:00:00Z' },
+  { id: 'm6', name: 'Emily Davis', email: 'emily@example.com', role: 'QA Engineer', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop', department: 'Quality', joinedAt: '2026-03-22T08:00:00Z' },
+]
+
+const loadMembers = (): IMember[] => {
+  if (typeof window === 'undefined') { return [...teamSeed] }
+  const stored = localStorage.getItem(TEAM_STORAGE_KEY)
+  if (!stored) {
+    localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify(teamSeed))
+    return [...teamSeed]
+  }
+  try { return JSON.parse(stored) as IMember[] }
+  catch { return [...teamSeed] }
+}
+
+const saveMembers = (members: IMember[]): void => {
+  if (typeof window === 'undefined') { return }
+  localStorage.setItem(TEAM_STORAGE_KEY, JSON.stringify(members))
+}
+
+let teamStore: IMember[] = loadMembers()
+
+// ── Notifications Store ──
+const NOTIFICATIONS_STORAGE_KEY_PREFIX = 'msw_notifications_'
+
+const notificationsSeed: INotification[] = [
+  { id: 'n1', userId: 'user-1', title: 'Task Completed', message: 'Kyle Reese completed "Implement Login UI"', type: 'success', read: false, createdAt: '2026-05-24T10:30:00Z', link: '/kanban' },
+  { id: 'n2', userId: 'user-1', title: 'New Member', message: 'Emily Davis has joined the team as QA Engineer', type: 'info', read: false, createdAt: '2026-05-24T09:15:00Z', link: '/team' },
+  { id: 'n3', userId: 'user-1', title: 'Project Update', message: 'Brand Redesign project progress reached 70%', type: 'info', read: false, createdAt: '2026-05-23T16:45:00Z', link: '/projects' },
+  { id: 'n4', userId: 'user-1', title: 'Task Overdue', message: 'Draft Architecture Plan task is past its due date', type: 'warning', read: true, createdAt: '2026-05-23T08:00:00Z', link: '/kanban' },
+  { id: 'n5', userId: 'user-1', title: 'Mention', message: 'Sarah Connor mentioned you in a comment on API Refactoring', type: 'info', read: true, createdAt: '2026-05-22T14:20:00Z', link: '/projects' },
+  { id: 'n6', userId: 'user-1', title: 'Status Change', message: 'Mobile App Implementation moved to In Review', type: 'success', read: false, createdAt: '2026-05-22T11:00:00Z', link: '/kanban' },
+  { id: 'n7', userId: 'user-1', title: 'System Alert', message: 'New deployment available for the dashboard module', type: 'warning', read: true, createdAt: '2026-05-21T09:30:00Z' },
+  { id: 'n8', userId: 'user-1', title: 'Welcome', message: 'Welcome to Project Management Dashboard!', type: 'success', read: true, createdAt: '2026-05-20T08:00:00Z' },
+]
+
+const loadNotifications = (userId: string): INotification[] => {
+  if (typeof window === 'undefined') { return [...notificationsSeed] }
+  const key = `${NOTIFICATIONS_STORAGE_KEY_PREFIX}${userId}`
+  const stored = localStorage.getItem(key)
+  if (!stored) {
+    localStorage.setItem(key, JSON.stringify(notificationsSeed))
+    return [...notificationsSeed]
+  }
+  try { return JSON.parse(stored) as INotification[] }
+  catch { return [...notificationsSeed] }
+}
+
+const saveNotifications = (userId: string, notifications: INotification[]): void => {
+  if (typeof window === 'undefined') { return }
+  localStorage.setItem(`${NOTIFICATIONS_STORAGE_KEY_PREFIX}${userId}`, JSON.stringify(notifications))
+}
 
 
 export const handlers = [
@@ -529,6 +590,83 @@ export const handlers = [
     }
     tasksStore = tasksStore.filter((t) => t.id !== id)
     saveTasks(tasksStore)
+    return HttpResponse.json<IApiResponse<null>>({ data: null })
+  }),
+
+  // ── Team Members ──
+  http.get('*/api/team', () => {
+    teamStore = loadMembers()
+    return HttpResponse.json<IApiResponse<IMember[]>>({ data: teamStore })
+  }),
+
+  http.post('*/api/team', async ({ request }) => {
+    const body = (await request.json()) as IMemberFormData
+    const newMember: IMember = {
+      id: `m${Date.now()}`,
+      name: body.name,
+      email: body.email,
+      role: body.role,
+      avatar: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop`,
+      department: body.department,
+      joinedAt: new Date().toISOString(),
+    }
+    teamStore = [...teamStore, newMember]
+    saveMembers(teamStore)
+    return HttpResponse.json<IApiResponse<IMember>>({ data: newMember }, { status: 201 })
+  }),
+
+  http.put('*/api/team/:id', async ({ params, request }) => {
+    const { id } = params
+    const body = (await request.json()) as Partial<IMemberFormData>
+    const index = teamStore.findIndex((m) => m.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Member not found' }, { status: 404 })
+    }
+    const updated: IMember = { ...teamStore[index], ...body }
+    teamStore = [...teamStore.slice(0, index), updated, ...teamStore.slice(index + 1)]
+    saveMembers(teamStore)
+    return HttpResponse.json<IApiResponse<IMember>>({ data: updated })
+  }),
+
+  http.delete('*/api/team/:id', ({ params }) => {
+    const { id } = params
+    const index = teamStore.findIndex((m) => m.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Member not found' }, { status: 404 })
+    }
+    teamStore = teamStore.filter((m) => m.id !== id)
+    saveMembers(teamStore)
+    return HttpResponse.json<IApiResponse<null>>({ data: null })
+  }),
+
+  // ── Notifications ──
+  http.get('*/api/notifications', ({ request }) => {
+    const authHeader = request.headers.get('Authorization')
+    const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : ''
+    const userId = token === 'mock-jwt-token-12345' ? 'user-1' : 'user-1'
+    const notifications = loadNotifications(userId)
+    return HttpResponse.json<IApiResponse<INotification[]>>({ data: notifications })
+  }),
+
+  http.put('*/api/notifications/:id/read', ({ params }) => {
+    const { id } = params
+    const userId = 'user-1'
+    const notifications = loadNotifications(userId)
+    const index = notifications.findIndex((n) => n.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Notification not found' }, { status: 404 })
+    }
+    const updated = { ...notifications[index], read: true }
+    const updatedNotifications = [...notifications.slice(0, index), updated, ...notifications.slice(index + 1)]
+    saveNotifications(userId, updatedNotifications)
+    return HttpResponse.json<IApiResponse<INotification>>({ data: updated })
+  }),
+
+  http.put('*/api/notifications/read-all', () => {
+    const userId = 'user-1'
+    const notifications = loadNotifications(userId)
+    const updated = notifications.map((n) => ({ ...n, read: true }))
+    saveNotifications(userId, updated)
     return HttpResponse.json<IApiResponse<null>>({ data: null })
   }),
 ]

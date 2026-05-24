@@ -3,9 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 import { AppLayout } from './AppLayout'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { themeReducer } from '@/store/themeSlice'
-import { authReducer } from '@/store/authSlice'
-import { uiReducer } from '@/store/uiSlice'
+import { themeReducer, authReducer, uiReducer, notificationsReducer } from '@/store'
 import { MemoryRouter } from 'react-router-dom'
 
 describe('AppLayout', () => {
@@ -17,6 +15,7 @@ describe('AppLayout', () => {
         theme: themeReducer,
         auth: authReducer,
         ui: uiReducer,
+        notifications: notificationsReducer,
       },
     })
   })

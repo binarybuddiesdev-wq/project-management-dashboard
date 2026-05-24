@@ -1,9 +1,10 @@
 import { render, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import { Topbar } from './Topbar'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { themeReducer } from '@/store/themeSlice'
+import { themeReducer, notificationsReducer } from '@/store'
 import type { IUser } from '@/types'
 
 describe('Topbar', () => {
@@ -18,6 +19,7 @@ describe('Topbar', () => {
     return configureStore({
       reducer: {
         theme: themeReducer,
+        notifications: notificationsReducer,
       },
     })
   }
@@ -28,13 +30,15 @@ describe('Topbar', () => {
     
     const { getByText, getByPlaceholderText, getByAltText } = render(
       <Provider store={getStore()}>
-        <Topbar
-          title="Custom Title"
-          isCollapsed={false}
-          onToggle={handleToggle}
-          user={mockUser}
-          onLogout={handleLogout}
-        />
+        <MemoryRouter>
+          <Topbar
+            title="Custom Title"
+            isCollapsed={false}
+            onToggle={handleToggle}
+            user={mockUser}
+            onLogout={handleLogout}
+          />
+        </MemoryRouter>
       </Provider>
     )
 
@@ -49,13 +53,15 @@ describe('Topbar', () => {
     
     const { getByRole, getByText, queryByText } = render(
       <Provider store={getStore()}>
-        <Topbar
-          title="Custom Title"
-          isCollapsed={false}
-          onToggle={handleToggle}
-          user={mockUser}
-          onLogout={handleLogout}
-        />
+        <MemoryRouter>
+          <Topbar
+            title="Custom Title"
+            isCollapsed={false}
+            onToggle={handleToggle}
+            user={mockUser}
+            onLogout={handleLogout}
+          />
+        </MemoryRouter>
       </Provider>
     )
 
@@ -81,13 +87,15 @@ describe('Topbar', () => {
     
     const { getByRole } = render(
       <Provider store={getStore()}>
-        <Topbar
-          title="Custom Title"
-          isCollapsed={true}
-          onToggle={handleToggle}
-          user={mockUser}
-          onLogout={handleLogout}
-        />
+        <MemoryRouter>
+          <Topbar
+            title="Custom Title"
+            isCollapsed={true}
+            onToggle={handleToggle}
+            user={mockUser}
+            onLogout={handleLogout}
+          />
+        </MemoryRouter>
       </Provider>
     )
 

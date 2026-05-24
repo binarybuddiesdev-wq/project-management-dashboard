@@ -7,5 +7,8 @@ export * from './navigation.types'
 export * from './dashboard.types'
 export * from './project.types'
 export * from './tasks.types'
+export * from './team.types'
+export * from './notifications.types'
+export * from './settings.types'
 
 

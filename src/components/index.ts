@@ -15,4 +15,7 @@ export * from './ProjectFilters'
 export * from './KanbanCard'
 export * from './KanbanColumn'
 export * from './TaskModal'
+export * from './MemberCard'
+export * from './InviteMemberModal'
+export * from './NotificationItem'
 

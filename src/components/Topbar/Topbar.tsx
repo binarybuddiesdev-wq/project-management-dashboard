@@ -1,12 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Bell, Search, Sun, Moon, LogOut, Menu } from 'lucide-react'
 import { useTheme } from '@/hooks/useTheme'
+import { selectUnreadCount } from '@/store'
 import type { ITopbarProps } from '@/types'
 
 export const Topbar = (props: ITopbarProps) => {
   const { title, isCollapsed, onToggle, user, onLogout } = props
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const { theme, toggleTheme } = useTheme()
+  const unreadCount = useSelector(selectUnreadCount)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const avatarUrl = user?.avatar || 'https://i.pravatar.cc/32?img=4'
@@ -67,14 +71,18 @@ export const Topbar = (props: ITopbarProps) => {
         </button>
 
         {/* Notifications Icon with Badge */}
-        <button
-          type="button"
+        <Link
+          to="/notifications"
           className="p-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground relative transition-colors cursor-pointer"
-          aria-label="Notifications"
+          aria-label={`Notifications: ${unreadCount} unread`}
         >
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-card animate-pulse" />
-        </button>
+          {unreadCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-[10px] font-bold text-white flex items-center justify-center ring-2 ring-card">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+        </Link>
 
         {/* User Profile Dropdown */}
         <div className="relative" ref={dropdownRef}>
