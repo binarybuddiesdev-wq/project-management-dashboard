@@ -248,7 +248,39 @@ Comply with all rules from agents.md: prefixed interfaces, named exports, no inl
 
 ## Phase 6 — Kanban Board
 
-_Not yet started._
+**Built using Google Antigravity IDE with Gemini Pro and OpenCode AI:**
+
+```
+/startcycle Start Phase 6 — Kanban Board.
+
+Read docs/phase-6/implementation-plan.md and docs/phase-6/walkthrough.md carefully.
+
+Frontend Engineer:
+1. Create task types in src/types/task.types.ts — ITask, ITaskFormData, ITaskCardProps, ITaskModalProps, IKanbanColumnProps
+2. Create tasks.service.ts in src/services — getTasks, createTask, updateTask, deleteTask using ky
+3. Create useTasks.ts in src/hooks — useTasks, useCreateTask, useUpdateTask, useDeleteTask wrapping TanStack Query with optimistic updates for drag-and-drop
+4. Create KanbanCard.tsx in src/components/KanbanCard — draggable card with priority color indicators and edit/delete actions
+5. Create KanbanColumn.tsx in src/components/KanbanColumn — droppable column with task count badge and loading/error/empty states
+6. Create TaskModal.tsx in src/components/TaskModal — Create/Edit form modal using React Hook Form + Zod with fields for title, description, priority, assignee, due date, labels
+7. Create Kanban.tsx in src/pages/Kanban — Kanban board page with DragDropContext, four columns (backlog, in_progress, in_review, done), and loading/error states
+8. Update App.tsx — add /kanban route inside AppLayout
+9. Update Sidebar NAV_ITEMS — add Kanban navigation link
+10. Update barrel exports in components, pages, hooks, services, types index files
+
+Test Engineer:
+- tasks.service.test.ts — CRUD integration tests
+- useKanban.test.tsx — query and mutation scenarios with drag-and-drop optimistic updates
+- KanbanCard.test.tsx — card display, priority indicator, edit/delete triggers
+- KanbanColumn.test.tsx — column display, task count, empty state
+- TaskModal.test.tsx — form fields and Zod validation checks
+
+Comply with all rules from agents.md: prefixed interfaces, named exports, no inline destructuring, path aliases, co-located test files.
+```
+
+**Fix Prompts Used During Phase 6:**
+- "The Kanban navigation link is missing from the sidebar — add it to the NAV_ITEMS array in src/components/Sidebar/Sidebar.tsx after Projects."
+- "Custom scrollbar fix on kanban page — use Playwright to investigate and fix. The actual overflowing element is the parent flex container (line 119 of Kanban.tsx), not the inner droppable div. Add kanban-scroll class to the correct element."
+- "Dashboard scrollbar fix — add dashboard-scroll class to the root div in Dashboard.tsx so the page-level scrollbar uses custom styling matching projects and kanban scrollbars."
 
 ## Phase 7 — Team Members, Notifications & Settings
 

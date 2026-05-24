@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-rou
 import { store } from '@/store'
 import { queryClient } from '@/services'
 import { AppLayout, AuthLayout } from '@/layouts'
-import { Dashboard, Login, Signup, ForgotPassword, ProjectsList, ProjectDetail } from '@/pages'
+import { Dashboard, Login, Signup, ForgotPassword, ProjectsList, ProjectDetail, Kanban } from '@/pages'
 import { ErrorBoundary, ProtectedRoute } from '@/components'
 import { useEffect, useState, createContext, useContext } from 'react'
 import { useAuth } from '@/hooks'
@@ -69,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: 'projects/:id',
         element: <ProjectDetail />,
+      },
+      {
+        path: 'kanban',
+        element: <Kanban />,
       },
     ],
   },

@@ -32,7 +32,7 @@ This entire project was created using **Google Antigravity IDE** with **Gemini P
 | Collapsible sidebar navigation          | ✅ Complete |
 | Dark / Light theme toggle               | ✅ Complete |
 | Projects list and detail view           | ✅ Complete |
-| Kanban board with drag-and-drop         | 🔄 Planned |
+| Kanban board with drag-and-drop         | ✅ Complete |
 | Team members with virtualized list      | 🔄 Planned |
 | Notifications with badge and mark-read  | 🔄 Planned |
 | Settings (profile, password, theme)     | 🔄 Planned |
@@ -186,7 +186,7 @@ src/
 | 3 | Core Layout & Navigation | 🟢 Complete |
 | 4 | Dashboard | 🟢 Complete |
 | 5 | Projects | 🟢 Complete |
-| 6 | Kanban Board | 🔴 Not Started |
+| 6 | Kanban Board | 🟢 Complete |
 | 7 | Team Members, Notifications & Settings | 🔴 Not Started |
 | 8 | End to End Tests & Final Polish | 🔴 Not Started |
 

@@ -12,4 +12,7 @@ export * from './ActivityFeed'
 export * from './ProjectCard'
 export * from './ProjectModal'
 export * from './ProjectFilters'
+export * from './KanbanCard'
+export * from './KanbanColumn'
+export * from './TaskModal'
 

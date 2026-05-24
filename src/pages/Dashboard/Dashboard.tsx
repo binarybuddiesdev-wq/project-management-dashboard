@@ -37,7 +37,7 @@ export const Dashboard = () => {
   const recentActivities = dashboardData?.recentActivities || []
 
   return (
-    <div className="space-y-6">
+    <div className="dashboard-scroll overflow-y-auto space-y-6 h-full min-h-0">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">Welcome back to your workspace overview.</p>

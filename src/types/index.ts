@@ -6,5 +6,6 @@ export * from './ui.types'
 export * from './navigation.types'
 export * from './dashboard.types'
 export * from './project.types'
+export * from './tasks.types'
 
 

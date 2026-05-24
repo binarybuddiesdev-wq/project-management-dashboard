@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import type { IApiResponse, ILoginResponseData, ISignupResponseData, IForgotPasswordResponseData, IUser, IProject, IProjectFormData } from '@/types'
+import type { IApiResponse, ILoginResponseData, ISignupResponseData, IForgotPasswordResponseData, IUser, IProject, IProjectFormData, ITask, ITaskFormData } from '@/types'
 
 // Retrieve registered users from localStorage, seeding a default user if empty
 const getRegisteredUsers = (): Record<string, string>[] => {
@@ -67,6 +67,86 @@ const saveProjects = (projects: IProject[]): void => {
 }
 
 let projectsStore: IProject[] = loadProjects()
+
+// ── Tasks Store ──
+const TASKS_STORAGE_KEY = 'msw_tasks'
+
+const tasksSeed: ITask[] = [
+  {
+    id: 't1',
+    title: 'Research User Personas',
+    description: 'Gather user feedback and define initial personas for the target demographic.',
+    status: 'backlog',
+    priority: 'medium',
+    assignee: 'John Doe',
+    dueDate: '2026-06-30',
+    labels: ['Research', 'Discovery'],
+    createdAt: '2026-05-01T09:00:00Z',
+    updatedAt: '2026-05-01T09:00:00Z'
+  },
+  {
+    id: 't2',
+    title: 'Draft Architecture Plan',
+    description: 'Prepare draft documentation for the frontend state structure and API design.',
+    status: 'in_progress',
+    priority: 'high',
+    assignee: 'Sarah Connor',
+    dueDate: '2026-06-15',
+    labels: ['Docs', 'Architecture'],
+    createdAt: '2026-05-05T10:00:00Z',
+    updatedAt: '2026-05-05T10:00:00Z'
+  },
+  {
+    id: 't3',
+    title: 'Implement Login UI',
+    description: 'Code the login and signup forms with responsive design and validations.',
+    status: 'in_review',
+    priority: 'urgent',
+    assignee: 'Kyle Reese',
+    dueDate: '2026-05-28',
+    labels: ['Frontend', 'Auth'],
+    createdAt: '2026-05-10T08:00:00Z',
+    updatedAt: '2026-05-10T08:00:00Z'
+  },
+  {
+    id: 't4',
+    title: 'Scaffold Application',
+    description: 'Run pnpm create vite, configure tailwind, and initialize shadcn/ui components.',
+    status: 'done',
+    priority: 'low',
+    assignee: 'John Doe',
+    dueDate: '2026-05-20',
+    labels: ['Setup', 'DevOps'],
+    createdAt: '2026-05-01T08:00:00Z',
+    updatedAt: '2026-05-01T08:00:00Z'
+  }
+]
+
+const loadTasks = (): ITask[] => {
+  if (typeof window === 'undefined') {
+    return [...tasksSeed]
+  }
+  const stored = localStorage.getItem(TASKS_STORAGE_KEY)
+  if (!stored) {
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasksSeed))
+    return [...tasksSeed]
+  }
+  try {
+    return JSON.parse(stored) as ITask[]
+  } catch {
+    return [...tasksSeed]
+  }
+}
+
+const saveTasks = (tasks: ITask[]): void => {
+  if (typeof window === 'undefined') {
+    return
+  }
+  localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
+}
+
+let tasksStore: ITask[] = loadTasks()
+
 
 export const handlers = [
   http.get('*/api/health', () => {
@@ -397,6 +477,58 @@ export const handlers = [
     }
     projectsStore = projectsStore.filter((p) => p.id !== id)
     saveProjects(projectsStore)
+    return HttpResponse.json<IApiResponse<null>>({ data: null })
+  }),
+
+  http.get('*/api/tasks', () => {
+    tasksStore = loadTasks()
+    return HttpResponse.json<IApiResponse<ITask[]>>({ data: tasksStore })
+  }),
+
+  http.post('*/api/tasks', async ({ request }) => {
+    const body = (await request.json()) as ITaskFormData
+    const newTask: ITask = {
+      id: `t${Date.now()}`,
+      title: body.title,
+      description: body.description,
+      status: body.status,
+      priority: body.priority,
+      assignee: body.assignee,
+      dueDate: body.dueDate,
+      labels: body.labels || [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+    tasksStore = [...tasksStore, newTask]
+    saveTasks(tasksStore)
+    return HttpResponse.json<IApiResponse<ITask>>({ data: newTask }, { status: 201 })
+  }),
+
+  http.put('*/api/tasks/:id', async ({ params, request }) => {
+    const { id } = params
+    const body = (await request.json()) as Partial<ITaskFormData>
+    const index = tasksStore.findIndex((t) => t.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Task not found' }, { status: 404 })
+    }
+    const updated: ITask = {
+      ...tasksStore[index],
+      ...body,
+      updatedAt: new Date().toISOString(),
+    }
+    tasksStore = [...tasksStore.slice(0, index), updated, ...tasksStore.slice(index + 1)]
+    saveTasks(tasksStore)
+    return HttpResponse.json<IApiResponse<ITask>>({ data: updated })
+  }),
+
+  http.delete('*/api/tasks/:id', ({ params }) => {
+    const { id } = params
+    const index = tasksStore.findIndex((t) => t.id === id)
+    if (index === -1) {
+      return HttpResponse.json<IApiResponse<unknown>>({ error: 'Task not found' }, { status: 404 })
+    }
+    tasksStore = tasksStore.filter((t) => t.id !== id)
+    saveTasks(tasksStore)
     return HttpResponse.json<IApiResponse<null>>({ data: null })
   }),
 ]

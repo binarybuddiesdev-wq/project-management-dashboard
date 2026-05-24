@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { 
   LayoutDashboard, 
   FolderKanban, 
+  Kanban,
   Settings, 
   Users, 
   ChevronLeft, 
@@ -14,6 +15,7 @@ import type { ISidebarProps } from '@/types'
 const NAV_ITEMS = [
   { label: 'Dashboard', path: '/', icon: LayoutDashboard },
   { label: 'Projects', path: '/projects', icon: FolderKanban },
+  { label: 'Kanban', path: '/kanban', icon: Kanban },
   { label: 'Team', path: '/team', icon: Users },
   { label: 'Settings', path: '/settings', icon: Settings },
 ]

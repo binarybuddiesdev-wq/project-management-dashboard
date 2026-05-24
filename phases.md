@@ -15,9 +15,9 @@
 
 ## Overall Progress
 - Total Phases: 8
-- Completed: 5
+- Completed: 6
 - In Progress: 0
-- Not Started: 3
+- Not Started: 2
 
 ---
 
@@ -219,39 +219,39 @@
 ---
 
 ## Phase 6 — Kanban Board
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Depends On:** Phase 5 🟢 Complete
 
 ### Frontend Tasks
-- [ ] Create Kanban page (src/pages/Kanban/Kanban.tsx)
-- [ ] Create Kanban column component (src/components/KanbanColumn/)
-- [ ] Create Kanban card component (src/components/KanbanCard/)
-- [ ] Create Add/Edit task modal (src/components/TaskModal/)
-  - [ ] Fields: title, description, priority, assignee, due date, labels
-- [ ] Implement drag and drop using @hello-pangea/dnd
-- [ ] Create useKanban custom hook (src/hooks/useKanban.ts)
-- [ ] Create tasks service (src/services/tasks.service.ts)
-- [ ] Set up MSW handlers for tasks CRUD and status change
-- [ ] Use TanStack Query for task fetching and mutations
-- [ ] Implement optimistic updates on drag and drop
-- [ ] Column task count badge
-- [ ] Card priority color indicators
-- [ ] Smooth drag animation
-- [ ] Loading, error, empty states per column
+- [x] Create Kanban page (src/pages/Kanban/Kanban.tsx)
+- [x] Create Kanban column component (src/components/KanbanColumn/)
+- [x] Create Kanban card component (src/components/KanbanCard/)
+- [x] Create Add/Edit task modal (src/components/TaskModal/)
+  - [x] Fields: title, description, priority, assignee, due date, labels
+- [x] Implement drag and drop using @hello-pangea/dnd
+- [x] Create useKanban custom hook (src/hooks/useKanban.ts)
+- [x] Create tasks service (src/services/tasks.service.ts)
+- [x] Set up MSW handlers for tasks CRUD and status change
+- [x] Use TanStack Query for task fetching and mutations
+- [x] Implement optimistic updates on drag and drop
+- [x] Column task count badge
+- [x] Card priority color indicators
+- [x] Smooth drag animation
+- [x] Loading, error, empty states per column
 
 ### Test Tasks
-- [ ] useKanban.test.ts — fetch tasks, move task, create, delete
-- [ ] KanbanColumn.test.tsx — renders correctly, task count, empty state
-- [ ] KanbanCard.test.tsx — renders correctly, priority indicator, click
-- [ ] TaskModal.test.tsx — form validation, submit, cancel
-- [ ] tasks.service.test.ts — all operations
+- [x] useKanban.test.ts — fetch tasks, move task, create, delete
+- [x] KanbanColumn.test.tsx — renders correctly, task count, empty state
+- [x] KanbanCard.test.tsx — renders correctly, priority indicator, click
+- [x] TaskModal.test.tsx — form validation, submit, cancel
+- [x] tasks.service.test.ts — all operations
 
 ### Verification
-- [ ] pnpm exec tsc --noEmit — zero errors
-- [ ] pnpm run build — zero errors
-- [ ] pnpm run test — all pass
-- [ ] pnpm run test --coverage
-- [ ] QA — drag and drop works, tasks persist after drag, modal works, animations smooth
+- [x] pnpm exec tsc --noEmit — zero errors
+- [x] pnpm run build — zero errors
+- [x] pnpm run test — all pass
+- [x] pnpm run test --coverage
+- [x] QA — drag and drop works, tasks persist after drag, modal works, animations smooth
 
 ---
 
@@ -370,6 +370,6 @@
 | 3 | Core Layout & Navigation | 🟢 Complete |
 | 4 | Dashboard | 🟢 Complete |
 | 5 | Projects | 🟢 Complete |
-| 6 | Kanban Board | 🔴 Not Started |
+| 6 | Kanban Board | 🟢 Complete |
 | 7 | Team Members, Notifications & Settings | 🔴 Not Started |
 | 8 | End to End Tests & Final Polish | 🔴 Not Started |
