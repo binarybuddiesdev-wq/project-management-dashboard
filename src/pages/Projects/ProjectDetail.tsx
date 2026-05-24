@@ -112,6 +112,7 @@ export const ProjectDetail = () => {
           <button
             onClick={handleEdit}
             type="button"
+            aria-label="Edit project"
             className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border border-border bg-background text-foreground hover:bg-accent transition-colors cursor-pointer"
           >
             <Pencil className="h-4 w-4" />
@@ -120,6 +121,7 @@ export const ProjectDetail = () => {
           <button
             onClick={handleDelete}
             type="button"
+            aria-label="Delete project"
             className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border border-destructive/20 bg-destructive/5 text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
           >
             <Trash2 className="h-4 w-4" />

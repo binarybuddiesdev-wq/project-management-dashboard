@@ -33,6 +33,7 @@ export const NotificationItem = (props: INotificationItemProps) => {
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10 }}
+      data-testid={`notification-item-${notification.id}`}
       className={`group relative flex items-start gap-3 p-4 rounded-xl transition-all duration-200 ${
         notification.read ? 'bg-card hover:bg-accent/30' : 'bg-accent/20 hover:bg-accent/40'
       }`}

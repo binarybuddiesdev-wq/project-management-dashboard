@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/store'
 import { toggleSidebar } from '@/store'
-import { useAuth } from '@/hooks'
+import { useAuth, useNotifications } from '@/hooks'
 import { Sidebar, Topbar, Breadcrumb } from '@/components'
 
 export interface IAppLayoutProps {
@@ -15,6 +15,7 @@ export const AppLayout = (props: IAppLayoutProps) => {
   const dispatch = useDispatch()
   const sidebarCollapsed = useSelector((state: RootState) => state.ui.sidebarCollapsed)
   const { user, logout } = useAuth()
+  useNotifications()
   const location = useLocation()
 
   const handleToggleSidebar = React.useCallback(() => {

@@ -345,7 +345,37 @@ Comply with all rules from agents.md: prefixed interfaces, named exports, no inl
 
 ## Phase 8 — End to End Tests & Final Polish
 
-_Not yet started._
+**Kickoff Prompt:**
+
+```
+/startcycle Start Phase 8 — End to End Tests & Final Polish.
+
+Read docs/phase-8/implementation-plan.md and docs/phase-8/walkthrough.md carefully.
+
+E2E test tasks:
+- Create playwright E2E tests in the e2e/ folder for all application modules: auth, dashboard, projects, kanban, team, notifications, settings.
+- e2e/auth.spec.ts: Signup, login (credentials: john@example.com / Password@123), redirection, logout.
+- e2e/dashboard.spec.ts: metrics, recent activities feed, recent projects, chart renders.
+- e2e/projects.spec.ts: seeded list display, filters, crud modal flow.
+- e2e/kanban.spec.ts: columns layout, task creation, edit status modal flow, deletion.
+- e2e/team.spec.ts: list loading, invite modal form validation and submit.
+- e2e/notifications.spec.ts: badge unread count, mark as read, mark all read.
+- e2e/settings.spec.ts: profile form submit, password validation errors, theme switching.
+
+Final polish tasks:
+- Audit spacing, skeleton layouts, empty/error states, dark/light theme switching, and responsiveness.
+- Run all verification checks in order.
+```
+
+**Fix Prompts and Test Isolation Fixes applied during Phase 8:**
+- "Ensure all E2E spec files clear localStorage in beforeEach to isolate test state and trigger automatic MSW re-seeding."
+- "Correct the login credentials in auth.spec.ts and other E2E tests to use the correct email john@example.com and password Password@123."
+- "Fix strictness violations in Playwright selectors where generic selectors like text=Dashboard, text=Team Members, and text=Settings resolved to multiple elements in the layout by using more specific selectors (e.g. h1:has-text(...) or h2:has-text(...))."
+- "Update team.spec.ts to use selectOption instead of fill for select inputs role and department."
+- "Update kanban.spec.ts E2E drag and drop test to change task status via the edit task modal instead of HTML5 drag simulation, ensuring robust and reliable execution in headless test runners."
+- "Add aria-label attributes to the Edit and Delete buttons on the ProjectDetail page so that the E2E selectors button[aria-label=\"Edit project\"] and button[aria-label=\"Delete project\"] can uniquely resolve them."
+- "Call useNotifications hook globally at AppLayout level so that the Topbar notification bell unread badge count updates on every page, not just the notifications page."
+- "Add data-testid attribute to motion.div in NotificationItem.tsx to resolve test locator failures in notifications.spec.ts."
 
 ---
 

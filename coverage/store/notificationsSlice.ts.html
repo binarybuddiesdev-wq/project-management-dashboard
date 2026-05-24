@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for store/uiSlice.ts</title>
+    <title>Code coverage report for store/notificationsSlice.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">store</a> uiSlice.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">store</a> notificationsSlice.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/12</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/12</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -94,17 +94,13 @@
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -113,49 +109,71 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">75x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { IUiState } from '@/types'
+import type { INotification, INotificationState } from '@/types'
+import type { RootState } from './store'
 &nbsp;
-const getInitialSidebarCollapsed = (): boolean =&gt; {
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof window !== 'undefined') {
-    return localStorage.getItem('sidebarCollapsed') === 'true'
-  }
-<span class="cstat-no" title="statement not covered" >  return false</span>
+const initialState: INotificationState = {
+  items: [],
+  unreadCount: 0,
 }
 &nbsp;
-const initialState: IUiState = {
-  sidebarCollapsed: getInitialSidebarCollapsed(),
-}
-&nbsp;
-export const uiSlice = createSlice({
-  name: 'ui',
+export const notificationsSlice = createSlice({
+  name: 'notifications',
   initialState,
   reducers: {
-    toggleSidebar: (state) =&gt; {
-      state.sidebarCollapsed = !state.sidebarCollapsed
-      localStorage.setItem('sidebarCollapsed', String(state.sidebarCollapsed))
+    setNotifications: (state, action: PayloadAction&lt;INotification[]&gt;) =&gt; {
+      state.items = action.payload
+      state.unreadCount = action.payload.filter((n) =&gt; !n.read).length
     },
-    setSidebarCollapsed: (state, action: PayloadAction&lt;boolean&gt;) =&gt; {
-      state.sidebarCollapsed = action.payload
-      localStorage.setItem('sidebarCollapsed', String(state.sidebarCollapsed))
+    markAsRead: (state, action: PayloadAction&lt;string&gt;) =&gt; {
+      const notification = state.items.find((n) =&gt; n.id === action.payload)
+      if (notification &amp;&amp; !notification.read) {
+        notification.read = true
+        state.unreadCount = Math.max(0, state.unreadCount - 1)
+      }
+    },
+    markAllAsRead: (state) =&gt; {
+      state.items.forEach((n) =&gt; { n.read = true })
+      state.unreadCount = 0
+    },
+    incrementUnread: (state) =&gt; {
+      state.unreadCount += 1
     },
   },
 })
 &nbsp;
-export const { toggleSidebar, setSidebarCollapsed } = uiSlice.actions
-export const uiReducer = uiSlice.reducer
+export const { setNotifications, markAsRead, markAllAsRead, incrementUnread } = notificationsSlice.actions
+export const selectUnreadCount = (state: RootState): number =&gt; state.notifications.unreadCount
+export const notificationsReducer = notificationsSlice.reducer
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

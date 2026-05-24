@@ -36,7 +36,7 @@ This entire project was created using **Google Antigravity IDE** with **Gemini P
 | Team members with virtualized list      | ✅ Complete |
 | Notifications with badge and mark-read  | ✅ Complete |
 | Settings (profile, password, theme)     | ✅ Complete |
-| End-to-end Playwright tests             | 🔄 Planned |
+| End-to-end Playwright tests             | ✅ Complete |
 
 ## Tech Stack
 
@@ -188,7 +188,7 @@ src/
 | 5 | Projects | 🟢 Complete |
 | 6 | Kanban Board | 🟢 Complete |
 | 7 | Team Members, Notifications & Settings | 🟢 Complete |
-| 8 | End to End Tests & Final Polish | 🔴 Not Started |
+| 8 | End to End Tests & Final Polish | 🟢 Complete |
 
 Each phase includes implementation plans, walkthrough documentation, and strict verification (TypeScript check → build → test → coverage → QA visual inspection).
 
